@@ -63,9 +63,12 @@
     <div class="ces-search-control ces-search-control--double">
       <date-picker v-model="dateFrom"
                    label="Даты начала"
-                   :config="dateFromConfig"
-                   @change="onDateFromChange"></date-picker>
-      <date-picker v-model="dateTill" :config="dateTillConfig"></date-picker>
+                   :min-date="minDateFrom"
+                   :events="dates"
+                   @on-select="onDateFromSelect"></date-picker>
+      <date-picker v-model="dateTill"
+                   :events="dates"
+                   :min-date="minDateTill"></date-picker>
     </div>
     <div class="ces-search-control ces-search-control--double">
       <form-switch v-model="rus"
@@ -81,7 +84,9 @@
 <script>
 import {mapState} from 'vuex'
 import dayJs from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayJs.extend(customParseFormat)
 import FormSwitch from '../components/FormSwitch.vue'
 import PersonControl from '../components/PersonControl.vue'
 import SelectBox from '../components/SelectBox.vue'
@@ -90,11 +95,10 @@ import DatePicker from '../components/DatePicker.vue'
 export default {
   name: 'SearchFilter',
   components: {FormSwitch, PersonControl, SelectBox, DatePicker},
-
   data() {
     let date = dayJs().add(1, 'day')
     return {
-      maxPersons: 5, //сумма значений кол-во взрослых и кол-во детей
+      maxPersons: 5,
       minDateFrom: new Date(date.year(), date.month(), date.date()),
       minDateTill: new Date(date.year(), date.month(), date.date())
     }
@@ -205,46 +209,6 @@ export default {
       }
     },
 
-    dateFrom: {
-      get() {
-        let dateFrom = this.$store.state.form.dateFrom
-        return dayJs(dateFrom).format('DD-MM-YYYY')
-      },
-
-      set(value) {
-        dayJs.extend(customParseFormat)
-        let date = dayJs(value, 'DD.MM.YYYY')
-        let {dateFrom, dateTill} = this.$store.state.form
-        let result
-        if (date.isValid()) {
-          result = date.format('YYYY-MM-DD')
-          if (dayJs(dateFrom).isAfter(dayJs(dateTill))) { //if dateFrom > dateTill
-            this.$store.commit('form/SET_DATE_TILL', date.add(3, 'month').format('YYYY-MM-DD'))
-          }
-        } else {
-          result = dateFrom
-        }
-
-        this.$store.commit('form/SET_DATE_FROM', result)
-      }
-    },
-
-    dateTill: {
-      get() {
-        let dateTill = this.$store.state.form.dateTill
-        return dayJs(dateTill).format('DD-MM-YYYY')
-      },
-
-      set(value) {
-        dayJs.extend(customParseFormat)
-        let date = dayJs(value, 'DD.MM.YYYY')
-        let result = date.isValid()
-          ? date.format('YYYY-MM-DD')
-          : this.$store.state.form.dateTill
-        this.$store.commit('form/SET_DATE_TILL', result)
-      }
-    },
-
     adults: {
       get() {
         return +this.$store.state.form.adults
@@ -285,6 +249,32 @@ export default {
       return this.maxPersons - this.$store.state.form.adults
     },
 
+    dateFrom: {
+      get() {
+        return this.$store.state.form.dateFrom
+      },
+
+      set(value) {
+        this.$store.commit('form/SET_DATE_FROM', value)
+      }
+    },
+
+    dateTill: {
+      get() {
+        return this.$store.state.form.dateTill
+      },
+
+      set(value) {
+        this.$store.commit('form/SET_DATE_TILL', value)
+      }
+    },
+
+    dates() {
+      return this.getAvailable('date')
+        .filter((item, position, self) => self.indexOf(item) === position)
+        .map(date => +dayJs(date))
+    },
+
     rus: {
       get() {
         return !!this.$store.state.form.rus
@@ -303,48 +293,23 @@ export default {
       set(value) {
         this.$store.commit('form/SET_AVAILABLE', value ? 1 : null)
       }
-    },
-
-    dates() {
-      return this.getAvailable('date')
-        .filter((item, position, self) => self.indexOf(item) === position)
-        .map(date => +dayJs(date))
-    },
-
-    dateFromConfig() {
-      let {onDayCreate, onOpen} = this
-      return {
-        minDate: this.minDateFrom,
-        onDayCreate,
-        onOpen
-      }
-    },
-
-    dateTillConfig() {
-      let {onDayCreate, onOpen} = this
-      return {
-        minDate: this.minDateTill,
-        onDayCreate,
-        onOpen
-      }
     }
   },
 
   methods: {
-    onDayCreate(dObj, dStr, fp, dayElem) {
-      dayElem.classList.remove('ces-cruise-date')
-      if (this.dates.indexOf(+dayElem.dateObj) !== -1) {
-        dayElem.classList.add('ces-cruise-date')
+    onDateFromSelect(selectedDate) {
+      dayJs.extend(customParseFormat)
+      const format = process.env.VUE_APP_DATE_FORMAT
+      this.$set(this, 'minDateTill', selectedDate)
+      let date = dayJs(selectedDate)
+      const {dateFrom, dateTill} = this.$store.state.form
+      if (date.isValid()) {
+
+        if (dayJs(dateFrom, format).isAfter(dayJs(dateTill, format))) {
+
+          this.$store.commit('form/SET_DATE_TILL', date.add(3, 'month').format(format))
+        }
       }
-    },
-
-    onOpen(selectedDates, dateStr, instance) {
-      instance.redraw()
-    },
-
-    onDateFromChange(event) {
-      let [date] = event
-      this.$set(this, 'minDateTill', date)
     },
 
     getDatesRange(dateFrom, dateTill) {

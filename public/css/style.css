@@ -14,9 +14,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.page {
-}
-
 .page-container {
     width: 1040px;
     margin: 0 auto;
@@ -49,10 +46,6 @@ body {
     align-items: center;
     justify-content: center;
     height: 4rem;
-}
-
-.header__logo {
-
 }
 
 .header__logo--pac {

@@ -19,7 +19,9 @@ import SearchFilter from '../components/SearchFilter.vue'
 import SearchResults from '../components/SearchResults.vue'
 import LoaderSpinner from '../components/LoaderSpinner.vue'
 import {mapState} from 'vuex'
-import {mapValues, groupBy, omit} from 'lodash'
+import mapValues from 'lodash/mapValues'
+import groupBy from 'lodash/groupBy'
+import omit from 'lodash/omit'
 
 export default {
   name: 'SearchPage',
