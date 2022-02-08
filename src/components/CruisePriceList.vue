@@ -28,7 +28,7 @@
                        @click="show('CruiseShipModal', current.ships)">
                     <div class="ces-cruise-tag__icon">
                       <div class="ces-icon ces-icon-ship"></div>
-                    </div>&nbsp;{{ ship }}
+                    </div>{{ ship }}
                   </div>
                 </div>
                 <div class="ces-cruise-tag">
@@ -44,7 +44,7 @@
                   <div class="ces-cruise-tag__value">
                     <div class="ces-cruise-tag__icon" v-if="current.dynamicFlight.length">
                       <div class="ces-icon ces-icon-plane"></div>
-                    </div>&nbsp;
+                    </div>
                     <span v-text="flight"></span>
                   </div>
                 </div>
@@ -56,7 +56,7 @@
               <thead>
               <tr>
                 <th colspan="2">Категория каюты</th>
-                <th>Этот тариф включает</th>
+                <th>Включено</th>
                 <th>Стоимость</th>
               </tr>
               </thead>
@@ -64,8 +64,7 @@
               <tr class="ces-cruise-modal__table-row_hoverable"
                   v-for="fare in currentOfferOrdering"
                   :key="`${fare.categoryCode}-${fare.id}`">
-                <td @click="show('CruiseCabinModal', getCabinByCode(fare.categoryCode))"
-                    v-text="fare.categoryCode"></td>
+                <td v-text="fare.categoryCode"></td>
                 <td @click="show('CruiseCabinModal', getCabinByCode(fare.categoryCode))">
                   {{ options.cabins[fare.categoryCode] }}
                   <div class="ces-cruise-service ces-cruise-service_tip">
@@ -107,7 +106,7 @@
         <div class="ces-cruise-modal__half" v-if="current.priceInfo.priceIncludes">
           <div class="ces-cruise-modal__title">В стоимость включено</div>
           <ul class="ces-cruise__list">
-            <li v-for="(includes, key) in current.priceInfo.priceIncludes" :key="`${key}`"
+            <li class="ces-cruise__list-item" v-for="(includes, key) in current.priceInfo.priceIncludes" :key="`${key}`"
                 v-html="includes.replace(/<\/?[^>]+(>|$)/g, '')"></li>
           </ul>
         </div>
@@ -115,7 +114,7 @@
         <div class="ces-cruise-modal__half" v-if="current.priceInfo.priceExcludes">
           <div class="ces-cruise-modal__title">Оплачивается дополнительно</div>
           <ul class="ces-cruise__list">
-            <li v-for="(excludes, key) in current.priceInfo.priceExcludes" :key="`${key}`"
+            <li class="ces-cruise__list-item" v-for="(excludes, key) in current.priceInfo.priceExcludes" :key="`${key}`"
                 v-html="excludes.replace(/<\/?[^>]+(>|$)/g, '')"></li>
           </ul>
         </div>

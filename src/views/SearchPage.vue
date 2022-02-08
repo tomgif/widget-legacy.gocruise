@@ -82,6 +82,7 @@ export default {
   display: block;
 
   &__footer {
+    display: flex;
     border-top: 1px solid #cfdfec;
     padding: 8px 0 0;
   }

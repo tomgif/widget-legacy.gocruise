@@ -132,7 +132,7 @@ export default {
 .ces-bold {
   display: inline-block;
   font-weight: bold;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 </style>
 

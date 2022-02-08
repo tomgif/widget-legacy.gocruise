@@ -96,7 +96,7 @@ export default {
   &__button {
     border: 0;
     background: 0;
-    font-size: 16px;
+    font-size: 12px;
     margin: 0 8px;
     text-transform: uppercase;
     cursor: pointer;

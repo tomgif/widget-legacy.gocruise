@@ -12,7 +12,7 @@
                @click="show('CruiseShipModal', current.ships)">
             <div class="ces-cruise-tag__icon">
               <div class="ces-icon ces-icon-ship"></div>
-            </div>&nbsp;
+            </div>
             <span v-text="ship"></span>
           </div>
         </div>
@@ -44,8 +44,7 @@
         </div>
       </div>
       <div class="ces-cruise__itinerary">
-        <div class="ces-bold">Маршрут:</div>
-        <span v-text="itinerary"></span>
+        <span class="ces-bold">Маршрут:</span> {{ itinerary }}
       </div>
     </div>
     <div class="ces-cruise-row">
@@ -56,7 +55,7 @@
              :class="{'ces-cruise-details__tag--has-flight': current.dynamicFlight.length}">
           <div class="ces-cruise-details__icon" v-if="current.dynamicFlight.length">
             <div class="ces-icon ces-icon-plane"></div>
-          </div>&nbsp;
+          </div>
           <span v-text="flight"></span>
         </div>
       </div>
@@ -69,7 +68,7 @@
         <div class="ces-cruise-options__info">
           <div class="ces-bold">Выбрано <span v-text="selectedDate.format('D MMMM')"></span></div>
           <div class="ces-cruise-extra">
-            <span v-if="!hasExtra">В этом круизе доступны:</span>
+            <span class="ces-cruise-extra__title" v-if="!hasExtra">В этом круизе доступны:</span>
             <div class="ces-cruise-extra__item" v-for="(option, key) in extra" :key="`${current.grouping}-${key}`">
               <template v-if="option.value.length">
                 <div class="ces-cruise-extra__option" :style="{'background-color': option.color}"></div>
@@ -227,6 +226,7 @@ export default {
   &__itinerary {
     font-size: 10px;
     margin: 4px 0;
+    padding-right: 80px;
 
     @media (min-width: 576px) {
       font-size: 12px
@@ -242,6 +242,10 @@ export default {
   &__list {
     list-style: unset;
     padding-left: 16px;
+
+    &-item {
+      display: list-item;
+    }
   }
 }
 
@@ -259,7 +263,7 @@ export default {
 
   &__title {
     font-size: 10px;
-    line-height: 24px;
+    line-height: 20px;
     text-align: center;
   }
 }
@@ -274,11 +278,16 @@ export default {
 .ces-cruise-details {
   display: flex;
   flex-flow: row nowrap;
-  margin: 16px 0;
+  margin: 8px -8px;
 
   &__tag {
     padding: 4px;
     margin: 0 4px;
+
+    &:first-child {
+      width: 48px;
+      white-space: nowrap;
+    }
 
     &--type {
       background-color: rgba(0, 0, 0, .25);
@@ -296,6 +305,7 @@ export default {
     vertical-align: middle;
     width: 11px;
     height: 11px;
+    margin-right: 4px;
   }
 }
 
@@ -343,7 +353,8 @@ export default {
   }
 
   &__cabin {
-    color: #8a8787
+    color: #8a8787;
+    margin-bottom: 4px;
   }
 
   &__min-price {
@@ -403,7 +414,8 @@ export default {
   }
 
   &__title {
-    color: #9e9e9e
+    color: #9e9e9e;
+    margin-bottom: 2px;
   }
 
   &__value {
@@ -416,6 +428,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
 
     &_clickable {
       cursor: pointer;
@@ -429,6 +442,7 @@ export default {
   &__icon {
     width: 11px;
     height: 11px;
+    margin-right: 4px;
   }
 }
 
@@ -442,6 +456,7 @@ export default {
 
   &__half {
     flex: 1 50%;
+    padding: 0 4px;
 
     @media (max-width: 413px) {
       flex: 100%
@@ -583,7 +598,10 @@ export default {
   vertical-align: middle;
 
   &_tip {
-    float: right
+    right: 0;
+    top: 0;
+    margin: 8px;
+    position: absolute;
   }
 }
 
@@ -591,12 +609,16 @@ export default {
   line-height: 16px;
   margin: 4px 0;
 
+  &__title {
+    font-weight: bold;
+  }
+
   &__option {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: bottom;
     width: 4px;
     height: 4px;
-    margin: 1px;
+    margin: 6px 6px 6px 0;
     border-radius: 50%;
   }
 }

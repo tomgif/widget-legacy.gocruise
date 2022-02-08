@@ -175,8 +175,8 @@ export default {
   }
 
   &__experience-list {
-    display: inline-flex;
-    flex-flow: row;
+    display: flex;
+    flex-flow: row wrap;
   }
 
   &__experience-item {
